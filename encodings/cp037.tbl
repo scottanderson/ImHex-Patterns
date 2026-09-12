@@ -1,6 +1,9 @@
 -name IBM037
 -description Extended Binary Coded Decimal Interchange Code, developed by IBM for their Main Frames
--include iso8859_8
+00=\u0000
+01=\u0001
+02=\u0002
+03=\u0003
 04=\u009C
 05=\u0009
 06=\u0086
@@ -8,12 +11,27 @@
 08=\u0097
 09=\u008D
 0A=\u008E
+0B=\u000B
+0C=\u000C
+0D=\u000D
+0E=\u000E
+0F=\u000F
+10=\u0010
+11=\u0011
+12=\u0012
+13=\u0013
 14=\u009D
 15=\u0085
 16=\u0008
 17=\u0087
+18=\u0018
+19=\u0019
 1A=\u0092
 1B=\u008F
+1C=\u001C
+1D=\u001D
+1E=\u001E
+1F=\u001F
 20=\u0080
 21=\u0081
 22=\u0082
@@ -164,6 +182,7 @@ B2=¥
 B3=·
 B4=©
 B5=§
+B6=¶
 B7=¼
 B8=½
 B9=¾

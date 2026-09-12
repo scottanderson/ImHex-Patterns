@@ -1,6 +1,6 @@
 -name KOI8-R
 -description Cyrillic KOI8-R encoding (Russian characters)
--include iso8859_5
+-include ascii
 80=─
 81=│
 82=┌
@@ -87,6 +87,7 @@ D2=р
 D3=с
 D4=т
 D5=у
+D6=ж
 D7=в
 D8=ь
 D9=ы

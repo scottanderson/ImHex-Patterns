@@ -11,14 +11,14 @@ import sys
 
 ENCODINGS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "encodings")
 
-# Hand-authored game-text tables with no algorithmic or library source; left alone.
+# Hand-authored game-text tables. No codec covers them. Left untouched.
 HAND_AUTHORED_FILES = {
     "pokegen1_en.tbl",
     "pokegen3_en.tbl",
 }
 
-# python codec name -> (IANA name, description). Filenames are lowercase-only,
-# so this is the one place real capitalization lives; no library provides either field.
+# codec name -> (IANA name, description). Filenames are lowercase, so this is
+# the only place with real capitalization. No library provides these fields.
 CODEC_ENCODINGS = {
     "ascii": ("US-ASCII", "Regular ASCII encoding"),
     "big5hkscs": ("Big5", "Big5 encoding for Traditional Chinese (generated from the "
@@ -56,7 +56,7 @@ CODEC_ENCODINGS = {
     "shift_jis": ("Shift_JIS", "Shift-JIS encoding"),
 }
 
-# No standalone stdlib codec; JIS X 0201's Roman set + half-width katakana is exactly
+# No stdlib codec for JIS X 0201. Its Roman set and half-width katakana equal
 # shift_jis's single-byte range (see all_files()).
 JIS_X0201_INFO = ("JIS_X0201", "JIS X 0201 encoding (half-width katakana; Roman set "
                   "generated from shift_jis, so it matches ASCII rather than true "
@@ -114,21 +114,22 @@ def gen_codec_entries(codec_name):
 
 
 def find_bases(full_by_stem):
-    """For each stem, the other stem whose entries it best extends (biggest
-    number of matching key/value pairs among stems whose keys are fully
-    covered), or None. Processing smallest-first and only matching against
-    already-processed stems makes this a DAG (no cycles)."""
+    """For each stem, the largest stem it is a safe superset of, or None.
+
+    X is a safe superset of Y if every key/value pair in Y also occurs in X.
+    -include must never need X to redefine a value from Y, since ImHex may
+    not support that. Processing stems smallest-first, and only comparing
+    against already-processed stems, prevents include cycles."""
     bases = {}
     processed = {}
     for stem in sorted(full_by_stem, key=lambda s: (len(full_by_stem[s]), s)):
         entries = full_by_stem[stem]
-        best_stem, best_match = None, -1
+        best_stem, best_size = None, -1
         for other_stem, other_entries in processed.items():
-            if not set(other_entries).issubset(entries):
+            if len(other_entries) <= best_size:
                 continue
-            match = sum(1 for k, v in other_entries.items() if entries[k] == v)
-            if match > best_match:
-                best_stem, best_match = other_stem, match
+            if all(entries.get(k) == v for k, v in other_entries.items()):
+                best_stem, best_size = other_stem, len(other_entries)
         bases[stem] = best_stem
         processed[stem] = entries
     return bases
@@ -172,7 +173,7 @@ def all_files():
         entries = entries_by_key[display_key]
         base_stem = bases[stem]
         own = entries if base_stem is None else \
-            {k: v for k, v in entries.items() if full[base_stem].get(k) != v}
+            {k: v for k, v in entries.items() if k not in full[base_stem]}
         files[stem + ".tbl"] = build_primary_body(name, description, base_stem, own)
 
         for alias in aliases:
