@@ -1,0 +1,19 @@
+-name windows-1254
+-description Turkish Windows encoding
+-include cp1258
+8A=Š
+9A=š
+C3=Ã
+CC=Ì
+D0=Ğ
+D2=Ò
+D5=Õ
+DD=İ
+DE=Ş
+E3=ã
+EC=ì
+F0=ğ
+F2=ò
+F5=õ
+FD=ı
+FE=ş

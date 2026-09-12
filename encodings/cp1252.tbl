@@ -1,0 +1,11 @@
+-name windows-1252
+-description Extended ASCII encoding (Western Windows codepage)
+-include cp1254
+8E=Ž
+9E=ž
+D0=Ð
+DD=Ý
+DE=Þ
+F0=ð
+FD=ý
+FE=þ
